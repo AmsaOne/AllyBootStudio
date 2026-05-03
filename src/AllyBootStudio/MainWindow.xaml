@@ -142,7 +142,9 @@
                                        TextWrapping="Wrap"/>
                             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,12,0,0">
                                 <Button Content="Browse..."   Command="{Binding BrowseSourceCommand}" Margin="0,0,8,0"/>
-                                <Button Content="Transcode"   Command="{Binding TranscodeCommand}"/>
+                                <Button Content="Transcode"   Command="{Binding TranscodeCommand}"   Margin="0,0,8,0"/>
+                                <Button Content="Cancel"      Command="{Binding CancelCommand}"
+                                        ToolTip="Cancel the running transcode"/>
                             </StackPanel>
                         </Grid>
                     </Border>
