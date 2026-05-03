@@ -81,6 +81,36 @@ public sealed class FfmpegService
                 Logger.Warn($"Could not stat '{c}'", ex);
             }
         }
+
+        // winget Gyan.FFmpeg installs into a versioned package dir and does not
+        // always create the Links shim — search the package root for ffmpeg.exe.
+        try
+        {
+            var pkgRoot = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                @"Microsoft\WinGet\Packages");
+            if (Directory.Exists(pkgRoot))
+            {
+                foreach (var dir in Directory.EnumerateDirectories(pkgRoot, "Gyan.FFmpeg*",
+                             new EnumerationOptions { IgnoreInaccessible = true }))
+                {
+                    foreach (var hit in Directory.EnumerateFiles(dir, "ffmpeg.exe",
+                                 new EnumerationOptions
+                                 {
+                                     IgnoreInaccessible = true,
+                                     RecurseSubdirectories = true,
+                                 }))
+                    {
+                        return hit;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Warn("winget Packages probe failed", ex);
+        }
+
         return null;
     }
 
