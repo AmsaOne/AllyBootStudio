@@ -73,6 +73,7 @@ The simplest way:
 
 - **Windows 11** (Windows 10 may work, untested).
 - **ROG Ally / Ally X** (or any device running ASUS Armoury Crate SE 1.5+ with the launch-animation feature).
+- **Administrator rights.** The app self-elevates via UAC on launch — boot animation files live under `C:\ProgramData\ASUS\...` which standard users can't write to. You will see a UAC prompt every time you launch it.
 - **(Optional) ffmpeg** if you want the Transcode button to handle non-H.264 inputs. Install with `winget install Gyan.FFmpeg`.
 
 ---
@@ -81,11 +82,12 @@ The simplest way:
 
 - The auto-detection candidate list is heuristic — built from common ASUS install paths and may need updating for future ACSE versions. The "Pick folder" fallback always works as long as you can locate the numbered animation folders yourself.
 - ACSE 1.5+ "Personalization" UI must already have the matching animation selected for the slot you replace. The app doesn't change which slot ACSE points at; it only swaps the file inside it.
-- Validator is a heuristic (scans first 4 MB of the file for codec FourCCs). It's fast but can theoretically miss edge cases. ffmpeg's actual decode is the ground truth.
+- Validator parses the MP4 box hierarchy to read the codec FourCC out of `stsd`. Authoritative for well-formed MP4 files; ffmpeg is still the ground truth on edge-case containers.
 - No code signing — Windows SmartScreen will warn on first run.
 - Single-file self-contained build is ~68 MB because it bundles the .NET 8 runtime.
 - No video preview / scrubbing yet (planned).
 - No persistent settings yet (last-used slot, ffmpeg path override are not remembered between launches).
+- Diagnostic logs are written to `%LOCALAPPDATA%\AllyBootStudio\logs\app-{date}.log`. Transcode runs additionally drop a `transcode-{ok|failed|cancelled}-{timestamp}.log` next to it.
 
 ---
 
@@ -106,7 +108,7 @@ If you hit a bug or have a request, [open an issue](../../issues).
 ## Building from source
 
 ```powershell
-git clone https://github.com/<your-handle>/AllyBootStudio.git
+git clone https://github.com/AmsaOne/AllyBootStudio.git
 cd AllyBootStudio
 # requires .NET 8 SDK
 dotnet build src/AllyBootStudio/AllyBootStudio.csproj
@@ -146,7 +148,6 @@ src/AllyBootStudio/
 Co-created by:
 
 - **[AmsaOne](https://github.com/AmsaOne)**
--
 
 Boot-animation file-format research and slot numbering informed by [mlbl/ACSESVC](https://github.com/mlbl/ACSESVC) and the [ROG Ally Life community guide](https://rogallylife.com/2024/08/04/armoury-crate-se-startup-video-changer/) — full credit to those projects for figuring out the underlying mechanics.
 
@@ -154,4 +155,4 @@ Boot-animation file-format research and slot numbering informed by [mlbl/ACSESVC
 
 ## License
 
-This project is currently unlicensed (work in progress). A formal license will be chosen before a 1.0 release. Until then, treat the source as "available to read; ask before redistributing."
+[MIT License](LICENSE) — see the LICENSE file. You may use, modify, and redistribute the code freely; the software is provided as-is with no warranty.

@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.RegularExpressions;
 using AllyBootStudio.Models;
 
@@ -8,7 +8,6 @@ public sealed class AcseFolderLocator
 {
     // Known root folders Armoury Crate SE uses for boot animation user content.
     // The animation tree contains numbered folders (3-digit IDs like 359) each with one .mp4.
-    // We search several known roots; the first that contains numbered folders wins.
     private static readonly string[] CandidateRoots = new[]
     {
         @"C:\ProgramData\ASUS\ARMOURY CRATE Service\ACSE\Animation",
@@ -22,13 +21,19 @@ public sealed class AcseFolderLocator
 
     private static readonly Regex SlotIdPattern = new(@"^\d{3}$", RegexOptions.Compiled);
 
+    private static readonly EnumerationOptions DirEnum = new()
+    {
+        IgnoreInaccessible = true,
+        RecurseSubdirectories = false,
+    };
+
     public string? DetectedRoot { get; private set; }
 
     public IReadOnlyList<AnimationSlot> Discover()
     {
         foreach (var root in CandidateRoots)
         {
-            if (!Directory.Exists(root)) continue;
+            if (!SafeDirectoryExists(root)) continue;
             var slots = EnumerateSlots(root).ToList();
             if (slots.Count == 0) continue;
             DetectedRoot = root;
@@ -41,27 +46,74 @@ public sealed class AcseFolderLocator
 
     public IReadOnlyList<AnimationSlot> DiscoverIn(string root)
     {
-        if (!Directory.Exists(root)) return Array.Empty<AnimationSlot>();
-        DetectedRoot = root;
-        return EnumerateSlots(root).ToList();
+        if (!SafeDirectoryExists(root))
+        {
+            DetectedRoot = null;
+            return Array.Empty<AnimationSlot>();
+        }
+        var slots = EnumerateSlots(root).ToList();
+        // Mirror Discover(): only set DetectedRoot when we actually found something usable.
+        DetectedRoot = slots.Count == 0 ? null : root;
+        return slots;
+    }
+
+    private static bool SafeDirectoryExists(string path)
+    {
+        try { return Directory.Exists(path); }
+        catch (Exception ex)
+        {
+            Logger.Warn($"Directory.Exists('{path}') threw", ex);
+            return false;
+        }
     }
 
     private static IEnumerable<AnimationSlot> EnumerateSlots(string root)
     {
-        foreach (var dir in Directory.EnumerateDirectories(root))
+        IEnumerable<string> dirs;
+        try
+        {
+            dirs = Directory.EnumerateDirectories(root, "*", DirEnum);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"EnumerateDirectories('{root}') failed", ex);
+            yield break;
+        }
+
+        foreach (var dir in dirs)
         {
             var name = Path.GetFileName(dir);
             if (!SlotIdPattern.IsMatch(name)) continue;
 
-            var mp4 = Directory.EnumerateFiles(dir, "*.mp4", SearchOption.TopDirectoryOnly).FirstOrDefault();
+            string? mp4 = null;
+            try
+            {
+                mp4 = Directory.EnumerateFiles(dir, "*.mp4", DirEnum).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn($"EnumerateFiles('{dir}') failed", ex);
+            }
             if (mp4 is null) continue;
 
             var backupDir = Path.Combine(dir, "original");
-            var hasBackup = Directory.Exists(backupDir) &&
-                            Directory.EnumerateFiles(backupDir, "*.mp4").Any();
+            bool hasBackup = false;
+            try
+            {
+                hasBackup = Directory.Exists(backupDir) &&
+                            Directory.EnumerateFiles(backupDir, "*.mp4", DirEnum).Any();
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn($"Backup probe in '{backupDir}' failed", ex);
+            }
 
             long size = 0;
-            try { size = new FileInfo(mp4).Length; } catch { /* ignore */ }
+            try { size = new FileInfo(mp4).Length; }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Security.SecurityException)
+            {
+                Logger.Warn($"FileInfo('{mp4}').Length failed", ex);
+            }
 
             yield return new AnimationSlot(
                 Id: name,
