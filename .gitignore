@@ -1,0 +1,23 @@
+# Build output
+bin/
+obj/
+publish/
+
+# Test fixtures created by harnesses
+__test_acse/
+
+# Local shortcuts (path-specific, not portable)
+*.lnk
+
+# IDE / editor
+.vs/
+.vscode/
+*.user
+*.suo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log

@@ -1,0 +1,88 @@
+﻿<Application x:Class="AllyBootStudio.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="Bg"        Color="#0F1115"/>
+            <SolidColorBrush x:Key="Panel"     Color="#161A22"/>
+            <SolidColorBrush x:Key="PanelHi"   Color="#1E2331"/>
+            <SolidColorBrush x:Key="Accent"    Color="#FF3D6E"/>
+            <SolidColorBrush x:Key="AccentDim" Color="#963856"/>
+            <SolidColorBrush x:Key="Text"      Color="#E6E8EE"/>
+            <SolidColorBrush x:Key="TextDim"   Color="#8C92A3"/>
+            <SolidColorBrush x:Key="Good"      Color="#6BD09A"/>
+            <SolidColorBrush x:Key="Bad"       Color="#FF6B6B"/>
+
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="Background"  Value="{StaticResource PanelHi}"/>
+                <Setter Property="Foreground"  Value="{StaticResource Text}"/>
+                <Setter Property="BorderBrush" Value="#2A3142"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding"     Value="14,8"/>
+                <Setter Property="FontSize"    Value="13"/>
+                <Setter Property="Cursor"      Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="b"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="6"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="b" Property="Background" Value="#252B3B"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Foreground" Value="{StaticResource TextDim}"/>
+                                    <Setter Property="Opacity"    Value="0.55"/>
+                                    <Setter Property="Cursor"     Value="Arrow"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="AccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Background" Value="{StaticResource Accent}"/>
+                <Setter Property="Foreground" Value="#0F1115"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+            </Style>
+
+            <Style TargetType="{x:Type ListBoxItem}">
+                <Setter Property="Padding" Value="12,8"/>
+                <Setter Property="Foreground" Value="{StaticResource Text}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border x:Name="b"
+                                    Background="Transparent"
+                                    CornerRadius="6"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="b" Property="Background" Value="#1E2331"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="b" Property="Background" Value="#262E44"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="{StaticResource Text}"/>
+                <Setter Property="FontFamily" Value="Segoe UI"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
