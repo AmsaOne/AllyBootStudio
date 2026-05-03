@@ -3,6 +3,10 @@ bin/
 obj/
 publish/
 
+# Generated boot animation MP4s — large binaries; rendered on demand via
+# scripts/generate_boot_animation.py and shipped as Release assets.
+assets/*.mp4
+
 # Test fixtures created by harnesses
 __test_acse/
 

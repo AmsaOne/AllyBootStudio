@@ -7,13 +7,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     <AssemblyTitle>Ally Boot Studio</AssemblyTitle>
     <Product>Ally Boot Studio</Product>
     <Company>AllyBootStudio</Company>
-    <Version>0.1.0</Version>
+    <Version>0.2.1</Version>
     <RootNamespace>AllyBootStudio</RootNamespace>
     <AssemblyName>AllyBootStudio</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Embed icon as a WPF resource so MainWindow.xaml's Icon="icon.ico" binds at runtime. -->
+    <Resource Include="icon.ico" />
+  </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PublishSingleFile>true</PublishSingleFile>
