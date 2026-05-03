@@ -145,8 +145,8 @@ src/AllyBootStudio/
 
 Co-created by:
 
-- **[AmsaOne](https://github.com/AmsaOne)** — concept, direction, ROG Ally domain knowledge, testing.
-- **[Claude Code](https://claude.com/claude-code)** (Anthropic) — implementation pair-programming.
+- **[AmsaOne](https://github.com/AmsaOne)**
+- **[Claude Code](https://claude.com/claude-code)** (Anthropic) 
 
 Boot-animation file-format research and slot numbering informed by [mlbl/ACSESVC](https://github.com/mlbl/ACSESVC) and the [ROG Ally Life community guide](https://rogallylife.com/2024/08/04/armoury-crate-se-startup-video-changer/) — full credit to those projects for figuring out the underlying mechanics.
 
