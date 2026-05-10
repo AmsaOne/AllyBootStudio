@@ -157,3 +157,9 @@ Boot-animation file-format research and slot numbering informed by [mlbl/ACSESVC
 ## License
 
 [MIT License](LICENSE) — see the LICENSE file. You may use, modify, and redistribute the code freely; the software is provided as-is with no warranty.
+
+Final Source: AmsaOne @ https://github.com/AmsaOne
+It is never expected but if you feel the need and my guides/wiring diagrams are useful to you, Donations are always happily accepted
+BTC: 12RF 3PWZ RFYJ CTDV Y9NA ALTP POUC FGPDWK
+ETH: 0XE7 92F4 B5B5 30 D4A9 DOBE EB9E 09 ABB2 5A3O C977 1B
+DOGE: D6X1 DRJL OBF9 9VZA Z310 R2V0 74GC OK1B 6C
